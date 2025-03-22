@@ -1,0 +1,74 @@
+class Bat {
+    field int x, y;
+    field int width, height;
+    field int direction;
+    constructor Bat new(int xBat, int yBat, int widthBat, int heightBat) {
+	    let x = xBat;
+	    let y = yBat;
+	    let width = widthBat;
+	    let height = heightBat;
+	    let direction = 2;
+        do show();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void show() {
+        do Screen.setColor(true);
+	    do draw();
+        return;
+    }
+
+    method void draw() {
+	    do Screen.drawRectangle(x, y, x + width, y + height);
+	    return;
+    }
+
+    method void setDirection(int newDirection) {
+	    let direction = newDirection;
+        return;
+    }
+
+    method int getLeft() {
+        return x;
+    }
+
+    method int getRight() {
+        return x + width;
+    }
+
+    method void move() {
+	    if (direction = 1) {
+            do doScreenAndMove((x + width) + 1, y, (x + width) + 1, y + height, x, x + 1, true, -1, 0);
+	    } 
+
+	    else {
+            do doScreenAndMove(x - 1, y, x - 1, y + height, (x + width) - 1, x + width, false, 1, 511 - width);
+        }
+        
+        return;
+    }
+
+    method void doScreenAndMove(int x1, int y1, int x2, int y2, int x3, int x4, boolean isDir1, int num, int limit) {
+        let x = x + num;
+        if (x < limit & isDir1) {
+            let x = limit;
+        }
+
+        else {
+            if (x > limit & ~isDir1) {
+                let x = limit;
+            }
+        }
+        
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x1, y1, x2, y2);
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x3, y1, x4, y2);
+        return;
+    }
+}

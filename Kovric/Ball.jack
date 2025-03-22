@@ -1,0 +1,199 @@
+class Ball {
+    field int x, y;
+    field int distanceX, distanceY;
+    field int d, straightD, diagonalD;
+    field boolean isInvert, isXPositive, isYPositive;
+    field int left, right, top, bottom;
+    field int wall;
+
+    constructor Ball new(int xBall, int yBall, int leftBall, int rightBall, int topBall, int bottomBall) {    	
+	    let x = xBall;		
+	    let y = yBall;
+	    let left = leftBall;
+	    let right = rightBall - 6; 
+	    let top = topBall; 
+	    let bottom = bottomBall - 6; 
+	    let wall = 0;
+        do show();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void show() {
+        do Screen.setColor(true);
+	    do draw();
+        return;
+    }
+
+    method void hide() {
+        do Screen.setColor(false);
+	    do draw();
+        return;
+    }
+
+    method void draw() {
+	    do Screen.drawRectangle(x, y, x + 6, y + 6);
+	    return;
+    }
+
+    method int getLeft() {
+        return x;
+    }
+
+    method int getRight() {
+        return x + 5;
+    }
+
+    method void moveTo(int pointX, int pointY) {
+        var int dx, dy, value;
+        let distanceX = pointX - x;
+        let distanceY = pointY - y;
+        let dx = Math.abs(distanceX);
+        let dy = Math.abs(distanceY);
+        let isInvert = (dx < dy);
+        if (isInvert) {
+            let value = dx; 
+            let dx = dy;
+            let dy = value;
+            let isXPositive = (y < pointY);
+            let isYPositive = (x < pointX);
+        }
+
+        else {
+            let isXPositive = (x < pointX);
+            let isYPositive = (y < pointY);
+        }
+
+        let d = (2 * dy) - dx;
+        let straightD = 2 * dy;
+        let diagonalD = 2 * (dy - dx);
+        return;
+    }
+
+    method int move() {
+	    do hide();
+        if (d < 0) {
+            let d = d + straightD;
+        }
+
+        else {
+            let d = d + diagonalD;
+            if (isYPositive) {
+         	    if (isInvert) {
+	   	            let x = x + 1;
+    	        }
+
+                else {
+		            let y = y + 1;
+                }
+            }
+
+            else {
+         	    if (isInvert) {
+	   	            let x = x - 1;
+    	        }
+
+                else {
+		            let y = y - 1;
+                }
+            }
+	    }
+
+        if (isXPositive) {
+      	    if (isInvert) {
+                let y = y + 1;
+    	    }
+
+            else {
+	            let x = x + 1;
+            }
+	    }
+
+	    else {
+            if (isInvert) {
+	            let y = y - 1;
+	        }
+
+            else {
+		        let x = x - 1;
+            }
+	    }
+
+	    if (~(x > left)) {
+	        let wall = 1;    
+	        let x = left;
+	    }
+
+        if (~(x < right)) {
+	        let wall = 2;    
+	        let x = right;
+	    }
+
+        if (~(y > top)) {
+            let wall = 3;    
+	        let y = top;
+        }
+
+        if (~(y < bottom)) {
+            let wall = 4;    
+	        let y = bottom;
+        }
+
+	    do show();
+	    return wall;
+    }
+
+    method void getPush(int pushDirection) {
+	    var int newX, newY, divDistanceX, divDistanceY, factor;
+        let divDistanceX = distanceX / 10;
+        let divDistanceY = distanceY / 10;
+	    if (pushDirection = 0) {
+	        let factor = 10;
+	    } 
+
+	    else {
+	        if ((~(distanceX < 0)) & (pushDirection = 1) | (distanceX < 0) & (pushDirection = (-1))) {
+	            let factor = 20;
+   	        }
+
+	        else {
+	            let factor = 5;
+	        }
+	    }
+
+	    if (wall = 1) {
+	        let newX = 506;
+	        let newY = (divDistanceY * (-50)) / divDistanceX;
+            let newY = y + (newY * factor);
+	    }
+
+	    else {
+ 	        if (wall = 2) {
+	            let newX = 0;
+	            let newY = (divDistanceY * 50) / divDistanceX;
+                let newY = y + (newY * factor);
+	        }
+
+	        else {
+ 	            if (wall = 3) {
+		            let newY = 250;
+		            let newX = (divDistanceX * (-25)) / divDistanceY;
+	                let newX = x + (newX * factor);
+		        }
+
+	            else { 
+		            let newY = 0;
+		            let newX = (divDistanceX * 25) / divDistanceY;
+	                let newX = x + (newX * factor);
+		        }
+	        }
+	    }
+
+	    do moveTo(newX, newY);
+	    return;
+    }
+}
