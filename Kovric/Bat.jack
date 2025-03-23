@@ -1,12 +1,12 @@
 class Bat {
-    field int x, y;
+    
+    field int horizontalShift, verticalShift;
     field int width, height;
     field int direction;
     field int counter;
-    
     constructor Bat new(int xBat, int yBat, int widthBat, int heightBat) {
-	    let x = xBat;
-	    let y = yBat;
+	    let horizontalShift = xBat;
+	    let verticalShift = yBat;
 	    let width = widthBat;
 	    let height = heightBat;
 	    let direction = 2;
@@ -27,7 +27,7 @@ class Bat {
     }
 
     method void draw() {
-	    do Screen.drawRectangle(x, y, x + width, y + height);
+	    do Screen.drawRectangle(horizontalShift, verticalShift, horizontalShift + width, verticalShift + height);
 	    return;
     }
 
@@ -37,38 +37,37 @@ class Bat {
     }
 
     method int getLeft() {
-        return x;
+        return horizontalShift;
     }
 
     method int getRight() {
-        return x + width;
+        return horizontalShift + width;
     }
 
     method void move() {
         let counter = counter + 1; 
-        if (counter < 40) { 
+        if (counter < 45) { 
             return;
         }
-        
         let counter = 0;
 	    if (direction = 1) {
-            do doScreenAndMove((x + width) + 1, y, (x + width) + 1, y + height, x, x + 1, true, -1, 0);
+            do moveTo((horizontalShift + width) + 1, verticalShift, (horizontalShift + width) + 1, verticalShift + height, horizontalShift, horizontalShift + 1, true, -1, 0);
 	    } 
 	    else {
-            do doScreenAndMove(x - 1, y, x - 1, y + height, (x + width) - 1, x + width, false, 1, 511 - width);
+            do moveTo(horizontalShift - 1, verticalShift, horizontalShift - 1, verticalShift + height, (horizontalShift + width) - 1, horizontalShift + width, false, 1, 511 - width);
         }
         
         return;
     }
 
-    method void doScreenAndMove(int x1, int y1, int x2, int y2, int x3, int x4, boolean isDir1, int num, int limit) {
-        let x = x + num;
-        if ((x < limit) & (isDir1)) {
-            let x = limit;
+    method void moveTo(int x1, int y1, int x2, int y2, int x3, int x4, boolean isDir1, int num, int limit) {
+        let horizontalShift = horizontalShift + num;
+        if (horizontalShift < limit & isDir1) {
+            let horizontalShift = limit;
         }
         else {
-            if ((x > limit) & (~(isDir1))) {
-                let x = limit;
+            if (horizontalShift > limit & ~isDir1) {
+                let horizontalShift = limit;
             }
         }
         
