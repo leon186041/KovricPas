@@ -1,24 +1,66 @@
 class Ball {
+
     field int x, y;
     field int distanceX, distanceY;
     field int d, straightD, diagonalD;
     field boolean isInvert, isXPositive, isYPositive;
     field int left, right, top, bottom;
-    field int wall;
+    field int ballPosition; 
     field int counter;
+    field int lastBallPosition; 
+    field int score; 
 
-    constructor Ball new(int xBall, int yBall, int leftBall, int rightBall, int topBall, int bottomBall) {    	
-	    let x = xBall;		
-	    let y = yBall;
-	    let left = leftBall;
-	    let right = rightBall - 6; 
-	    let top = topBall; 
-	    let bottom = bottomBall - 6; 
-	    let wall = 0;
+    constructor Ball new(int xBall, int yBall, int leftBall, int rightBall, int topBall, int bottomBall) {
+        let x = xBall;
+        let y = yBall;
+        let left = leftBall;
+        let right = rightBall - 6;
+        let top = topBall;
+        let bottom = bottomBall - 6;
+        let ballPosition = 0;
         let counter = 0;
+        let lastBallPosition = 0;
+        let score = 0; 
         do show();
         return this;
     }
+
+    method boolean moveBall(Bat bat) {
+        var int pushDirection, batLeft, batRight, ballLeft, ballRight;
+        var boolean isOver;
+        let isOver = false; 
+        let ballPosition = move(); 
+        if ((ballPosition > 0) & (~(ballPosition = lastBallPosition))) {
+            let lastBallPosition = ballPosition; 
+            let pushDirection = 0;
+            let batLeft = bat.getLeft();
+            let batRight = bat.getRight();
+            let ballLeft = getLeft();
+            let ballRight = getRight();
+
+            if (ballPosition = 4) { 
+                let isOver = (batLeft > ballRight) | (batRight < ballLeft);
+                if (~isOver) {
+                    if (ballRight < (batLeft + 10)) {
+                        let pushDirection = -1;
+                    } else {
+                        if (ballLeft > (batRight - 10)) {
+                            let pushDirection = 2;
+                        }
+                    }
+                    let score = score + 1; 
+                }
+            }
+
+            do getPush(pushDirection); 
+        }
+        return isOver; 
+    }
+
+    method int getScore() {
+        return score; 
+    }
+
 
     method void dispose() {
         do Memory.deAlloc(this);
@@ -27,19 +69,19 @@ class Ball {
 
     method void show() {
         do Screen.setColor(true);
-	    do draw();
+        do draw();
         return;
     }
 
     method void hide() {
         do Screen.setColor(false);
-	    do draw();
+        do draw();
         return;
     }
 
     method void draw() {
-	    do Screen.drawRectangle(x, y, x + 6, y + 6);
-	    return;
+        do Screen.drawRectangle(x, y, x + 6, y + 6);
+        return;
     }
 
     method int getLeft() {
@@ -58,13 +100,12 @@ class Ball {
         let dy = Math.abs(distanceY);
         let isInvert = (dx < dy);
         if (isInvert) {
-            let value = dx; 
+            let value = dx;
             let dx = dy;
             let dy = value;
             let isXPositive = (y < pointY);
             let isYPositive = (x < pointX);
-        }
-        else {
+        } else {
             let isXPositive = (x < pointX);
             let isYPositive = (y < pointY);
         }
@@ -76,109 +117,99 @@ class Ball {
     }
 
     method int move() {
-        let counter = counter + 1;  
-        if (counter < 50) {  
-            return wall;
+        let counter = counter + 1;
+        if (counter < 110) {
+            return ballPosition;
         }
 
         let counter = 0;
-	    do hide();
+        do hide();
         if (d < 0) {
             let d = d + straightD;
-        }
-        else {
+        } else {
             let d = d + diagonalD;
             if (isYPositive) {
-         	    if (isInvert) {
-	   	            let x = x + 1;
-    	        }
-                else {
-		            let y = y + 1;
+                if (isInvert) {
+                    let x = x + 1;
+                } else {
+                    let y = y + 1;
+                }
+            } else {
+                if (isInvert) {
+                    let x = x - 1;
+                } else {
+                    let y = y - 1;
                 }
             }
-            else {
-         	    if (isInvert) {
-	   	            let x = x - 1;
-    	        }
-                else {
-		            let y = y - 1;
-                }
-            }
-	    }
+        }
         if (isXPositive) {
-      	    if (isInvert) {
-                let y = y + 1;
-    	    }
-            else {
-	            let x = x + 1;
-            }
-	    }
-	    else {
             if (isInvert) {
-	            let y = y - 1;
-	        }
-            else {
-		        let x = x - 1;
+                let y = y + 1;
+            } else {
+                let x = x + 1;
             }
-	    }
-	    if (~(x > left)) {
-	        let wall = 1;    
-	        let x = left;
-	    }
+        } else {
+            if (isInvert) {
+                let y = y - 1;
+            } else {
+                let x = x - 1;
+            }
+        }
+        if (~(x > left)) {
+            let ballPosition = 1;
+            let x = left;
+        }
         if (~(x < right)) {
-	        let wall = 2;    
-	        let x = right;
-	    }
+            let ballPosition = 2;
+            let x = right;
+        }
         if (~(y > top)) {
-            let wall = 3;    
-	        let y = top;
+            let ballPosition = 3;
+            let y = top;
         }
         if (~(y < bottom)) {
-            let wall = 4;    
-	        let y = bottom;
+            let ballPosition = 4;
+            let y = bottom;
         }
-	    do show();
-	    return wall;
+        do show();
+        return ballPosition;
     }
 
     method void getPush(int pushDirection) {
-	    var int newX, newY, divDistanceX, divDistanceY, factor;
+        var int newX, newY, divDistanceX, divDistanceY, factor;
         let divDistanceX = distanceX / 10;
         let divDistanceY = distanceY / 10;
-	    if (pushDirection = 0) {
-	        let factor = 10;
-	    } 
-	    else {
-	        if ((~(distanceX < 0)) & (pushDirection = 1) | (distanceX < 0) & (pushDirection = (-1))) {
-	            let factor = 20;
-   	        }
-	        else {
-	            let factor = 5;
-	        }
-	    }
-	    if (wall = 1) {
-	        do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 506, -50);
-	    }
-	    if (wall = 2) {
-	        do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 0, 50);
-	    }
- 	    if (wall = 3) {
+        if (pushDirection = 0) {
+            let factor = 10;
+        } else {
+            if ((~(distanceX < 0)) & (pushDirection = 1) | (distanceX < 0) & (pushDirection = (-1))) {
+                let factor = 20;
+            } else {
+                let factor = 5;
+            }
+        }
+        if (ballPosition = 1) {
+            do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 506, -50);
+        }
+        if (ballPosition = 2) {
+            do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 0, 50);
+        }
+        if (ballPosition = 3) {
             do moveToNewCoordinates(false, newX, newY, divDistanceX, divDistanceY, factor, 250, -25);
-		}
-	    if (wall = 4) {
+        }
+        if (ballPosition = 4) {
             do moveToNewCoordinates(false, newX, newY, divDistanceX, divDistanceY, factor, 0, 25);
-	    }
-	    return;
+        }
+        return;
     }
 
     method void moveToNewCoordinates(boolean isItY, int newX, int newY, int divDistanceX, int divDistanceY, int factor, int num1, int num2) {
         let newY = num1;
-		let newX = (divDistanceX * num2) / divDistanceY;
+        let newX = (divDistanceX * num2) / divDistanceY;
         if (isItY) {
-	        let newX = y + (newX * factor);
+            let newX = y + (newX * factor);
             do moveTo(newY, newX);
-        }
-        else {
+        } else {
             let newX = x + (newX * factor);
             do moveTo(newX, newY);
         }

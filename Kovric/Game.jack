@@ -1,8 +1,7 @@
 class Game {
+
     field Bat bat;
     field Ball ball;
-    field int wall;
-    field int lastWall;
     field boolean isOver;
     field int score;
 
@@ -10,14 +9,12 @@ class Game {
         do Screen.clearScreen();
         let bat = Bat.new(238, 230, 35, 5);
         let ball = Ball.new(253, 222, 0, 511, 0, 229);
-        do ball.moveTo(400,0);
+        do ball.moveTo(400, 0);
         do Screen.drawRectangle(0, 238, 511, 240);
-        do Output.moveCursor(22,0);
+        do Output.moveCursor(22, 0);
         do Output.printString("Score: 0");
         let isOver = false;
         let score = 0;
-        let wall = 0;
-        let lastWall = 0;
         return this;
     }
 
@@ -39,17 +36,18 @@ class Game {
             while ((key = 0) & (~isOver)) {
                 let key = Keyboard.keyPressed();
                 do bat.move();
-                do moveBall();
+                let isOver = ball.moveBall(bat); 
+                let score = ball.getScore(); 
+                do Output.moveCursor(22, 7);
+                do Output.printInt(score); 
             }
 
             if (key = 130) {
                 do bat.setDirection(1);
-            } 
-            else {
+            } else {
                 if (key = 132) {
                     do bat.setDirection(2);
-                } 
-                else {
+                } else {
                     if (key = 113) {
                         let isOver = true;
                     }
@@ -59,7 +57,10 @@ class Game {
             while ((~(key = 0)) & (~isOver)) {
                 let key = Keyboard.keyPressed();
                 do bat.move();
-                do moveBall();
+                let isOver = ball.moveBall(bat); 
+                let score = ball.getScore(); 
+                do Output.moveCursor(22, 7);
+                do Output.printInt(score); 
             }
         }
 
@@ -67,55 +68,18 @@ class Game {
             do Output.moveCursor(10, 28);
             do Output.printString("Game over. Press Enter to restart.");
             while (~(Keyboard.keyPressed() = 128)) {}
-            do dispose(); 
-            let isOver = false; 
+            do dispose();
+            let isOver = false;
             do Screen.clearScreen();
             let bat = Bat.new(238, 230, 35, 5);
             let ball = Ball.new(253, 222, 0, 511, 0, 229);
-            do ball.moveTo(400,0);
+            do ball.moveTo(400, 0);
             do Screen.drawRectangle(0, 238, 511, 240);
-            do Output.moveCursor(22,0);
+            do Output.moveCursor(22, 0);
             do Output.printString("Score: 0");
             let isOver = false;
             let score = 0;
-            let wall = 0;
-            let lastWall = 0;
             do run();
-        }
-
-        return;
-    }
-
-    method void moveBall() {
-        var int pushDirection, batLeft, batRight, ballLeft, ballRight;
-        let wall = ball.move();
-        if ((wall > 0) & (~(wall = lastWall))) {
-            let lastWall = wall;
-            let pushDirection = 0;
-            let batLeft = bat.getLeft();
-            let batRight = bat.getRight();
-            let ballLeft = ball.getLeft();
-            let ballRight = ball.getRight();
-        
-            if (wall = 4) {
-                let isOver = (batLeft > ballRight) | (batRight < ballLeft);
-                if (~isOver) {
-                    if (ballRight < (batLeft + 10)) {
-                        let pushDirection = -1;
-                    }
-                    else {
-                        if (ballLeft > (batRight - 10)) {
-                            let pushDirection = 2;
-                        }
-                    }
-    
-                    let score = score + 1;
-                    do Output.moveCursor(22,7);
-                    do Output.printInt(score);
-                }
-            }
-
-            do ball.getPush(pushDirection);
         }
 
         return;
