@@ -2,12 +2,14 @@ class Bat {
     field int x, y;
     field int width, height;
     field int direction;
+    field int counter;
     constructor Bat new(int xBat, int yBat, int widthBat, int heightBat) {
 	    let x = xBat;
 	    let y = yBat;
 	    let width = widthBat;
 	    let height = heightBat;
 	    let direction = 2;
+        let counter = 0;
         do show();
         return this;
     }
@@ -42,6 +44,11 @@ class Bat {
     }
 
     method void move() {
+        let counter = counter + 1; 
+        if (counter < 45) { 
+            return;
+        }
+        let counter = 0;
 	    if (direction = 1) {
             do doScreenAndMove((x + width) + 1, y, (x + width) + 1, y + height, x, x + 1, true, -1, 0);
 	    } 
