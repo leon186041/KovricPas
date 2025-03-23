@@ -1,5 +1,4 @@
 class Game {
-    static Game currentGame;
     field Bat bat;
     field Ball ball;
     field int wall;
@@ -29,13 +28,8 @@ class Game {
         return;
     }
 
-    function void newGame() {
-        let currentGame = Game.new();
-        return;
-    }
-    
-    function Game getCurrentGame() {
-        return currentGame;
+    function Game newGame() {
+        return Game.new();
     }
 
     method void run() {
@@ -80,11 +74,11 @@ class Game {
     }
 
     method void moveBall() {
-        var int bouncingDirection, batLeft, batRight, ballLeft, ballRight;
+        var int pushDirection, batLeft, batRight, ballLeft, ballRight;
         let wall = ball.move();
         if ((wall > 0) & (~(wall = lastWall))) {
             let lastWall = wall;
-            let bouncingDirection = 0;
+            let pushDirection = 0;
             let batLeft = bat.getLeft();
             let batRight = bat.getRight();
             let ballLeft = ball.getLeft();
@@ -94,12 +88,12 @@ class Game {
                 let isOver = (batLeft > ballRight) | (batRight < ballLeft);
                 if (~isOver) {
                     if (ballRight < (batLeft + 10)) {
-                        let bouncingDirection = -1;
+                        let pushDirection = -1;
                     }
 
                     else {
                         if (ballLeft > (batRight - 10)) {
-                            let bouncingDirection = 2;
+                            let pushDirection = 2;
                         }
                     }
     
@@ -109,17 +103,7 @@ class Game {
                 }
             }
 
-            do ball.getPush(bouncingDirection);
-        }
-
-        return;
-    }
-
-    method void delay(int iterations) {
-        var int i;
-        let i = 0;
-        while (i < iterations) {
-            let i = i + 1;
+            do ball.getPush(pushDirection);
         }
 
         return;
