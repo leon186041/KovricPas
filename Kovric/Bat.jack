@@ -63,12 +63,12 @@ class Bat {
 
     method void doScreenAndMove(int x1, int y1, int x2, int y2, int x3, int x4, boolean isDir1, int num, int limit) {
         let x = x + num;
-        if ((x < limit) & (isDir1 = true)) {
+        if ((x < limit) & (isDir1)) {
             let x = limit;
         }
 
         else {
-            if ((x > limit) & (isDir1 = false)) {
+            if ((x > limit) & (~(isDir1))) {
                 let x = limit;
             }
         }
