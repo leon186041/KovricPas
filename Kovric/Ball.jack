@@ -64,7 +64,6 @@ class Ball {
             let isXPositive = (y < pointY);
             let isYPositive = (x < pointX);
         }
-
         else {
             let isXPositive = (x < pointX);
             let isYPositive = (y < pointY);
@@ -87,70 +86,57 @@ class Ball {
         if (d < 0) {
             let d = d + straightD;
         }
-
         else {
             let d = d + diagonalD;
             if (isYPositive) {
          	    if (isInvert) {
 	   	            let x = x + 1;
     	        }
-
                 else {
 		            let y = y + 1;
                 }
             }
-
             else {
          	    if (isInvert) {
 	   	            let x = x - 1;
     	        }
-
                 else {
 		            let y = y - 1;
                 }
             }
 	    }
-
         if (isXPositive) {
       	    if (isInvert) {
                 let y = y + 1;
     	    }
-
             else {
 	            let x = x + 1;
             }
 	    }
-
 	    else {
             if (isInvert) {
 	            let y = y - 1;
 	        }
-
             else {
 		        let x = x - 1;
             }
 	    }
-
 	    if (~(x > left)) {
 	        let wall = 1;    
 	        let x = left;
 	    }
-
         if (~(x < right)) {
 	        let wall = 2;    
 	        let x = right;
 	    }
-
         if (~(y > top)) {
             let wall = 3;    
 	        let y = top;
         }
-
         if (~(y < bottom)) {
             let wall = 4;    
 	        let y = bottom;
         }
-
 	    do show();
 	    return wall;
     }
@@ -162,29 +148,23 @@ class Ball {
 	    if (pushDirection = 0) {
 	        let factor = 10;
 	    } 
-
 	    else {
 	        if ((~(distanceX < 0)) & (pushDirection = 1) | (distanceX < 0) & (pushDirection = (-1))) {
 	            let factor = 20;
    	        }
-
 	        else {
 	            let factor = 5;
 	        }
 	    }
-
 	    if (wall = 1) {
 	        do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 506, -50);
 	    }
-
 	    if (wall = 2) {
 	        do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 0, 50);
 	    }
-
  	    if (wall = 3) {
             do moveToNewCoordinates(false, newX, newY, divDistanceX, divDistanceY, factor, 250, -25);
 		}
-
 	    if (wall = 4) {
             do moveToNewCoordinates(false, newX, newY, divDistanceX, divDistanceY, factor, 0, 25);
 	    }

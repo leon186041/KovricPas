@@ -49,11 +49,11 @@ class Bat {
         if (counter < 40) { 
             return;
         }
+        
         let counter = 0;
 	    if (direction = 1) {
             do doScreenAndMove((x + width) + 1, y, (x + width) + 1, y + height, x, x + 1, true, -1, 0);
 	    } 
-
 	    else {
             do doScreenAndMove(x - 1, y, x - 1, y + height, (x + width) - 1, x + width, false, 1, 511 - width);
         }
@@ -66,7 +66,6 @@ class Bat {
         if ((x < limit) & (isDir1)) {
             let x = limit;
         }
-
         else {
             if ((x > limit) & (~(isDir1))) {
                 let x = limit;

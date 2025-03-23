@@ -45,12 +45,10 @@ class Game {
             if (key = 130) {
                 do bat.setDirection(1);
             } 
-        
             else {
                 if (key = 132) {
                     do bat.setDirection(2);
                 } 
-            
                 else {
                     if (key = 113) {
                         let isOver = true;
@@ -90,7 +88,6 @@ class Game {
                     if (ballRight < (batLeft + 10)) {
                         let pushDirection = -1;
                     }
-
                     else {
                         if (ballLeft > (batRight - 10)) {
                             let pushDirection = 2;
