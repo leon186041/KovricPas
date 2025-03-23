@@ -174,34 +174,34 @@ class Ball {
 	    }
 
 	    if (wall = 1) {
-	        let newX = 506;
-	        let newY = (divDistanceY * (-50)) / divDistanceX;
-            let newY = y + (newY * factor);
+	        do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 506, -50);
 	    }
 
-	    else {
- 	        if (wall = 2) {
-	            let newX = 0;
-	            let newY = (divDistanceY * 50) / divDistanceX;
-                let newY = y + (newY * factor);
-	        }
-
-	        else {
- 	            if (wall = 3) {
-		            let newY = 250;
-		            let newX = (divDistanceX * (-25)) / divDistanceY;
-	                let newX = x + (newX * factor);
-		        }
-
-	            else { 
-		            let newY = 0;
-		            let newX = (divDistanceX * 25) / divDistanceY;
-	                let newX = x + (newX * factor);
-		        }
-	        }
+	    if (wall = 2) {
+	        do moveToNewCoordinates(true, newY, newX, divDistanceY, divDistanceX, factor, 0, 50);
 	    }
 
-	    do moveTo(newX, newY);
+ 	    if (wall = 3) {
+            do moveToNewCoordinates(false, newX, newY, divDistanceX, divDistanceY, factor, 250, -25);
+		}
+
+	    if (wall = 4) {
+            do moveToNewCoordinates(false, newX, newY, divDistanceX, divDistanceY, factor, 0, 25);
+	    }
 	    return;
+    }
+
+    method void moveToNewCoordinates(boolean isItY, int newX, int newY, int divDistanceX, int divDistanceY, int factor, int num1, int num2) {
+        let newY = num1;
+		let newX = (divDistanceX * num2) / divDistanceY;
+        if (isItY) {
+	        let newX = y + (newX * factor);
+            do moveTo(newY, newX);
+        }
+        else {
+            let newX = x + (newX * factor);
+            do moveTo(newX, newY);
+        }
+        return;
     }
 }
