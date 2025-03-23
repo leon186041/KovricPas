@@ -5,6 +5,7 @@ class Ball {
     field boolean isInvert, isXPositive, isYPositive;
     field int left, right, top, bottom;
     field int wall;
+    field int counter;
 
     constructor Ball new(int xBall, int yBall, int leftBall, int rightBall, int topBall, int bottomBall) {    	
 	    let x = xBall;		
@@ -14,6 +15,7 @@ class Ball {
 	    let top = topBall; 
 	    let bottom = bottomBall - 6; 
 	    let wall = 0;
+        let counter = 0;
         do show();
         return this;
     }
@@ -75,6 +77,12 @@ class Ball {
     }
 
     method int move() {
+        let counter = counter + 1;  
+        if (counter < 50) {  
+            return wall;
+        }
+
+        let counter = 0;
 	    do hide();
         if (d < 0) {
             let d = d + straightD;
