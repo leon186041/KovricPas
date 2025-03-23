@@ -46,7 +46,7 @@ class Bat {
 
     method void move() {
         let counter = counter + 1; 
-        if (counter < 45) { 
+        if (counter < 105) { 
             return;
         }
         let counter = 0;
